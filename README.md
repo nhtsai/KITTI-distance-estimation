@@ -37,13 +37,17 @@ python prediction-visualizer.py
 ### Prepare Data
 1. **Download KITTI dataset**
 ```shell
+mkdir original_data
+cd original_data
+
 # get images
 wget https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zip
-unzip data_object_image_2.zip
+unzip -qq data_object_image_2.zip
+mv training/
 
 # get annotations
 wget https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_label_2.zip
-unzip data_object_label_2.zip
+unzip -qq data_object_label_2.zip
 ```
 
 Organize the data as follows:
@@ -51,16 +55,25 @@ Organize the data as follows:
 ```shell
 KITTI-distance-estimation
 |-- original_data
-    |-- test_images
-    |-- train_annots
-    `-- train_images
+    |-- train_images (7481 images)
+    |-- train_annots (7481 annotations)
+    `-- test_images  (7518 images)
+```
+```shell
+mv training/image_2/ train_images
+mv training/label_2/ train_annots
+rmdir training
+
+mv testing/image_2 test_images
+rmdir testing
 ```
 
 2. **Convert annotations from .txt to .csv**<br/>
 We only have train_annots. Put all information in the .txts in a .csv
 
 ```shell
-python generate-csv.py --input=original_data/train_annots --output=annotations.csv
+cd 
+python generate-csv.py --input=original_data/train_annots/ --output=annotations.csv
 ```
 
 The annotations contain the following information
@@ -100,9 +113,9 @@ Organize your data as follows
 ```
 KITTI-distance-estimation
 |-- original_data
-|    |-- test_images
+|    |-- train_images
 |    |-- train_annots
-|    `-- train_images
+|    `-- test_images
 `-- distance-estimator/
     |-- data
         |-- test.csv
